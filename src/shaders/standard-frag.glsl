@@ -7,6 +7,7 @@ in vec4 fs_Col;
 in vec2 fs_UV;
 
 in vec4 ws_Nor;
+in vec4 ss_Nor;
 
 out vec4 fragColor[3]; // The data in the ith index of this array of outputs
                        // is passed to the ith index of OpenGLRenderer's
@@ -34,6 +35,6 @@ void main() {
     // }
 
     fragColor[0] = vec4(ws_Nor.xyz, 1.0/fs_Pos.z);
-    fragColor[1] = vec4(vec3(0.0),z);
+    fragColor[1] = vec4(fs_Nor.xyz, z);
     fragColor[2] = vec4(col, 1.0);
 }

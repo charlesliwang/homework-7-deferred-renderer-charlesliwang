@@ -8,7 +8,7 @@ import Square from '../../geometry/Square';
 
 
 class OpenGLRenderer {
-  postProcessesActive: boolean[] = [true,false];
+  postProcessesActive: boolean[] = [];
 
   gBuffer: WebGLFramebuffer; // framebuffer for deferred rendering
 
@@ -69,8 +69,10 @@ class OpenGLRenderer {
 
     // TODO: these are placeholder post shaders, replace them with something good
     this.add8BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/passthroughPost-frag.glsl'))));
-    this.add8BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/examplePost-frag.glsl'))));
-    //this.add8BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/examplePost2-frag.glsl'))));
+    this.add8BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/SSAO-frag.glsl'))));
+    this.add8BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/vaporwave-frag.glsl'))));
+    this.add8BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/paint-frag.glsl'))));
+    this.add8BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/pointalism-frag.glsl'))));
 
     //this.add32BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/examplePost3-frag.glsl'))));
 

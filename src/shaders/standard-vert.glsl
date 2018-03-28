@@ -18,6 +18,7 @@ out vec4 fs_Col;
 out vec2 fs_UV;
 
 out vec4 ws_Nor;
+out vec4 ss_Nor;
 
 void main()
 {
@@ -29,6 +30,7 @@ void main()
     mat3 invTranspose = mat3(u_ModelInvTr);
     mat3 view = mat3(u_View);
     fs_Nor = vec4(view * invTranspose * vec3(vs_Nor), 0);
+    ss_Nor = u_Proj * vec4(view * invTranspose * vec3(vs_Nor), 0);
     fs_Pos = u_View * u_Model * vs_Pos;
 
 

@@ -43,5 +43,5 @@ void main() {
 	vec3 col = diffuse * diffuse_term;
 	
 
-	out_Col = vec4(col, 1.0);
+	out_Col = vec4((col.xyz), 1.0);
 }

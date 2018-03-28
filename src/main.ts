@@ -12,7 +12,10 @@ import Texture from './rendering/gl/Texture';
 
 // Define an object with application parameters and button callbacks
 const controls = {
-    'Pointalism' : false,
+  'Pointalism' : false,
+  'SSAO' : false,
+  'Paint' : false,
+  'Vaporwave' : true,
 };
 
 let postProcessActive : boolean[] = [true];
@@ -72,6 +75,9 @@ function main() {
     // Add controls to the gui
     const gui = new DAT.GUI();
     gui.add(controls, 'Pointalism' );
+    gui.add(controls, 'Paint' );
+    gui.add(controls, 'Vaporwave' );
+    gui.add(controls, 'SSAO' );
 
   // get canvas and webgl context
   const canvas = <HTMLCanvasElement> document.getElementById('canvas');
@@ -111,7 +117,10 @@ function main() {
     renderer.clear();
     renderer.clearGB();
 
-    renderer.postProcessesActive[1] = controls.Pointalism;
+    renderer.postProcessesActive[4] = controls.Pointalism;
+    renderer.postProcessesActive[3] = controls.Paint;
+    renderer.postProcessesActive[2] = controls.Vaporwave;
+    renderer.postProcessesActive[1] = controls.SSAO;
 
     // TODO: pass any arguments you may need for shader passes
     // forward render mesh info into gbuffers

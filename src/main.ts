@@ -44,7 +44,7 @@ var timer = {
 
 
 function loadOBJText() {
-  obj0 = readTextFile('../resources/obj/wahoo.obj')
+  obj0 = readTextFile(require('../resources/obj/wahoo.obj'))
 }
 
 

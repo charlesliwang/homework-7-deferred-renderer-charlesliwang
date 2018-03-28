@@ -11,9 +11,11 @@ import ShaderProgram, {Shader} from './rendering/gl/ShaderProgram';
 import Texture from './rendering/gl/Texture';
 
 // Define an object with application parameters and button callbacks
-// const controls = {
-//   // Extra credit: Add interactivity
-// };
+const controls = {
+    'Pointalism' : false,
+};
+
+let postProcessActive : boolean[] = [true];
 
 let square: Square;
 
@@ -67,7 +69,9 @@ function main() {
   document.body.appendChild(stats.domElement);
 
   // Add controls to the gui
-  // const gui = new DAT.GUI();
+    // Add controls to the gui
+    const gui = new DAT.GUI();
+    gui.add(controls, 'Pointalism' );
 
   // get canvas and webgl context
   const canvas = <HTMLCanvasElement> document.getElementById('canvas');
@@ -106,6 +110,8 @@ function main() {
 
     renderer.clear();
     renderer.clearGB();
+
+    renderer.postProcessesActive[1] = controls.Pointalism;
 
     // TODO: pass any arguments you may need for shader passes
     // forward render mesh info into gbuffers

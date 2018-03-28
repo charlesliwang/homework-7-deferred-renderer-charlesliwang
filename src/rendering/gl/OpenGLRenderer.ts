@@ -8,6 +8,8 @@ import Square from '../../geometry/Square';
 
 
 class OpenGLRenderer {
+  postProcessesActive: boolean[] = [true,false];
+
   gBuffer: WebGLFramebuffer; // framebuffer for deferred rendering
 
   gbTargets: WebGLTexture[]; // references to different 4-channel outputs of the gbuffer
@@ -66,10 +68,11 @@ class OpenGLRenderer {
     this.post32Passes = [];
 
     // TODO: these are placeholder post shaders, replace them with something good
+    this.add8BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/passthroughPost-frag.glsl'))));
     this.add8BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/examplePost-frag.glsl'))));
-    this.add8BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/examplePost2-frag.glsl'))));
+    //this.add8BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/examplePost2-frag.glsl'))));
 
-    this.add32BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/examplePost3-frag.glsl'))));
+    //this.add32BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/examplePost3-frag.glsl'))));
 
     if (!gl.getExtension("OES_texture_float_linear")) {
       console.error("OES_texture_float_linear not available");
@@ -321,10 +324,14 @@ class OpenGLRenderer {
     // the loop shows how to swap between frame buffers and textures given a list of processes,
     // but specific shaders (e.g. motion blur) need specific info as textures
     for (let i = 0; i < this.post8Passes.length; i++){
+      
+      
       // pingpong framebuffers for each pass
       // if this is the last pass, default is bound
       if (i < this.post8Passes.length - 1) gl.bindFramebuffer(gl.FRAMEBUFFER, this.post8Buffers[(i + 1) % 2]);
       else gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+
 
       gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
       gl.disable(gl.DEPTH_TEST);
@@ -334,7 +341,16 @@ class OpenGLRenderer {
       gl.activeTexture(gl.TEXTURE0);
       gl.bindTexture(gl.TEXTURE_2D, this.post8Targets[(i) % 2]);
 
-      this.post8Passes[i].draw();
+      for (let i = 0; i < this.gbTargets.length; i ++) {
+        gl.activeTexture(gl.TEXTURE0 + i + 1);
+        gl.bindTexture(gl.TEXTURE_2D, this.gbTargets[i]);
+      }
+
+      if(this.postProcessesActive[i] != true) {
+        this.post8Passes[0].draw();
+      } else {
+        this.post8Passes[i].draw();
+      }
 
       // bind default
       gl.bindFramebuffer(gl.FRAMEBUFFER, null);

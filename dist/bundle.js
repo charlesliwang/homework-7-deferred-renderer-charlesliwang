@@ -3658,7 +3658,7 @@ var timer = {
     },
 };
 function loadOBJText() {
-    obj0 = Object(__WEBPACK_IMPORTED_MODULE_7__globals__["b" /* readTextFile */])(__webpack_require__(79));
+    obj0 = Object(__WEBPACK_IMPORTED_MODULE_7__globals__["b" /* readTextFile */])('./resources/obj/wahoo.obj');
 }
 function loadScene() {
     square && square.destroy();
@@ -3667,7 +3667,7 @@ function loadScene() {
     square.create();
     mesh0 = new __WEBPACK_IMPORTED_MODULE_4__geometry_Mesh__["a" /* default */](obj0, __WEBPACK_IMPORTED_MODULE_0_gl_matrix__["b" /* vec3 */].fromValues(0, 0, 0));
     mesh0.create();
-    tex0 = new __WEBPACK_IMPORTED_MODULE_9__rendering_gl_Texture__["a" /* default */](__webpack_require__(80));
+    tex0 = new __WEBPACK_IMPORTED_MODULE_9__rendering_gl_Texture__["a" /* default */]('./resources/textures/wahoo.bmp');
 }
 function main() {
     // Initial display for framerate
@@ -3700,8 +3700,8 @@ function main() {
     renderer.setClearColor(0, 0, 0, 1);
     gl.enable(gl.DEPTH_TEST);
     const standardDeferred = new __WEBPACK_IMPORTED_MODULE_8__rendering_gl_ShaderProgram__["b" /* default */]([
-        new __WEBPACK_IMPORTED_MODULE_8__rendering_gl_ShaderProgram__["a" /* Shader */](gl.VERTEX_SHADER, __webpack_require__(81)),
-        new __WEBPACK_IMPORTED_MODULE_8__rendering_gl_ShaderProgram__["a" /* Shader */](gl.FRAGMENT_SHADER, __webpack_require__(82)),
+        new __WEBPACK_IMPORTED_MODULE_8__rendering_gl_ShaderProgram__["a" /* Shader */](gl.VERTEX_SHADER, __webpack_require__(79)),
+        new __WEBPACK_IMPORTED_MODULE_8__rendering_gl_ShaderProgram__["a" /* Shader */](gl.FRAGMENT_SHADER, __webpack_require__(80)),
     ]);
     standardDeferred.setupTexUnits(["tex_Color"]);
     function tick() {
@@ -15816,24 +15816,12 @@ class Texture {
 
 /***/ }),
 /* 79 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "obj/wahoo1BT7aEb.obj";
-
-/***/ }),
-/* 80 */
-/***/ (function(module, exports) {
-
-throw new Error("Module parse failed: Unexpected character '\u0000' (1:3)\nYou may need an appropriate loader to handle this file type.\n(Source code omitted for this binary file)");
-
-/***/ }),
-/* 81 */
 /***/ (function(module, exports) {
 
 module.exports = "#version 300 es\nprecision highp float;\n\nuniform mat4 u_Model;\nuniform mat4 u_ModelInvTr;  \n\nuniform mat4 u_View;   \nuniform mat4 u_Proj; \n\nin vec4 vs_Pos;\nin vec4 vs_Nor;\nin vec4 vs_Col;\nin vec2 vs_UV;\n\nout vec4 fs_Pos;\nout vec4 fs_Nor;            \nout vec4 fs_Col;           \nout vec2 fs_UV;\n\nout vec4 ws_Nor;\nout vec4 ss_Nor;\n\nvoid main()\n{\n    fs_Col = vs_Col;\n    fs_UV = vs_UV;\n    fs_UV.y = 1.0 - fs_UV.y;\n\n    // fragment info is in view space\n    mat3 invTranspose = mat3(u_ModelInvTr);\n    mat3 view = mat3(u_View);\n    fs_Nor = vec4(view * invTranspose * vec3(vs_Nor), 0);\n    ss_Nor = u_Proj * vec4(view * invTranspose * vec3(vs_Nor), 0);\n    fs_Pos = u_View * u_Model * vs_Pos;\n\n\n    ws_Nor = vec4(invTranspose * vec3(vs_Nor), 0);\n    \n    gl_Position = u_Proj * u_View * u_Model * vs_Pos;\n}\n"
 
 /***/ }),
-/* 82 */
+/* 80 */
 /***/ (function(module, exports) {
 
 module.exports = "#version 300 es\nprecision highp float;\n\nin vec4 fs_Pos;\nin vec4 fs_Nor;\nin vec4 fs_Col;\nin vec2 fs_UV;\n\nin vec4 ws_Nor;\nin vec4 ss_Nor;\n\nout vec4 fragColor[3]; // The data in the ith index of this array of outputs\n                       // is passed to the ith index of OpenGLRenderer's\n                       // gbTargets array, which is an array of textures.\n                       // This lets us output different types of data,\n                       // such as albedo, normal, and position, as\n                       // separate images from a single render pass.\n\nuniform sampler2D tex_Color;\n\n\nvoid main() {\n    // TODO: pass proper data into gbuffers\n    // Presently, the provided shader passes \"nothing\" to the first\n    // two gbuffers and basic color to the third.\n\n    vec3 col = texture(tex_Color, fs_UV).rgb;\n\n    // if using textures, inverse gamma correct\n    col = pow(col, vec3(2.2));\n    \n    float z = 0.0;\n    // if(fs_Pos.z > 100.0) {\n    //     z = 1.0;\n    // }\n\n    fragColor[0] = vec4(ws_Nor.xyz, 1.0/fs_Pos.z);\n    fragColor[1] = vec4(fs_Nor.xyz, z);\n    fragColor[2] = vec4(col, 1.0);\n}\n"

@@ -6,7 +6,7 @@ PennKey: chawang
 
 ## Why Did I Do More Vaporwave?
 
-(mario is not loading in the live demo, please download and npm install to run)
+[Live Demo](http://charlesliwang.com/homework-7-deferred-renderer-charlesliwang/)
 
 ![](img/vapor.png)
 
